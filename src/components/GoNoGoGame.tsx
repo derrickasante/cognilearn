@@ -10,7 +10,7 @@ export default function GoNoGoGame() {
   const [stim, setStim] = useState<{ isNoGo: boolean }>();
   const [events, setEvents] = useState<GoNoGoEvent[]>([]);
   const [sessionId, setSessionId] = useState<string>("");
-  const [windowMs, setWindowMs] = useState(1500);
+  const windowMs = 1500; // fixed value; removes unused setter warning
   const startRef = useRef<number | null>(null);
   const respondedRef = useRef(false);
 
@@ -29,13 +29,13 @@ export default function GoNoGoGame() {
     startRef.current = performance.now();
     const to = setTimeout(() => finishTrial(null), windowMs);
     return () => clearTimeout(to);
-  }, [trial]);
+  }, [trial]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.code === "Space") finishTrial("space"); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [stim, trial]);
+  }, [stim, trial]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function finishTrial(key: "space" | null) {
     if (!stim || respondedRef.current) return;
@@ -49,42 +49,39 @@ export default function GoNoGoGame() {
     const e: GoNoGoEvent = {
       trialIndex: trial, isNoGo: stim.isNoGo, responded, isCorrect, rtMs, ts: Date.now()
     };
-    setEvents(prev => [...prev, e]);
+    const next = [...events, e];
+    setEvents(next);
     if (sessionId) addDoc(collection(db, "sessions", sessionId, "events"), e);
 
     if (trial + 1 < nTrials) setTrial(t => t + 1);
-  }
-
-  useEffect(() => {
-    if (trial === nTrials) {
-      const s = summarizeGoNoGo(events);
+    else {
+      const s = summarizeGoNoGo(next);
       if (sessionId) {
         setDoc(doc(db, "sessions", sessionId), {
           endedAt: Date.now(), avgRT: s.avgRT, accuracy: s.accuracy
         }, { merge: true });
       }
     }
-  }, [trial]);
+  }
 
-  const s = summarizeGoNoGo(events);
   if (trial >= nTrials) {
-  const s = summarizeGoNoGo(events);
-  return (
-    <div className="section">
-      <div className="card">
-        <h2>Go/No-Go complete</h2>
-        <p>Trials: {s.n} · Avg RT: {s.avgRT} ms (Go only) · Accuracy: {(s.accuracy*100).toFixed(0)}%</p>
+    const s = summarizeGoNoGo(events);
+    return (
+      <div className="section">
+        <div className="card">
+          <h2>Go/No-Go complete</h2>
+          <p>Trials: {s.n} · Avg RT: {s.avgRT} ms (Go only) · Accuracy: {(s.accuracy * 100).toFixed(0)}%</p>
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="section" style={{ textAlign: "center" }}>
+      <h2>Go/No-Go — Trial {trial + 1}/{nTrials}</h2>
+      <p>Press <b>SPACE</b> quickly on <b>green</b> (Go). Do nothing on <b>red</b> (No-Go).</p>
+      <div className={`circle ${stim?.isNoGo ? "nogo" : "go"}`} />
+      <div className="kb-hint">Time limit: {windowMs} ms</div>
     </div>
   );
-}
-
-return (
-  <div className="section" style={{textAlign:"center"}}>
-    <h2>Go/No-Go — Trial {trial+1}/{nTrials}</h2>
-    <p>Press <b>SPACE</b> quickly on <b>green</b> (Go). Do nothing on <b>red</b> (No-Go).</p>
-    <div className={`circle ${stim?.isNoGo ? "nogo" : "go"}`} />
-    <div className="kb-hint">Time limit: {windowMs} ms</div>
-  </div>
-);
 }
