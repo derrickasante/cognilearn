@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+:root{
+  --bg:#070b12;
+  --bg-2:#0a101a;
+  --panel:#0e1523;
+  --panel-2:#121a2b;
+  --text:#eaf1ff;
+  --muted:#a2b3c9;
+  --brand:#7c6cff;       /* accent */
+  --brand-2:#5dd0ff;     /* accent 2 */
+  --ok:#43a047;
+  --warn:#e53935;
+  --ring:0 0 0 2px rgba(124,108,255,.45);
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  margin:0; background: radial-gradient(1200px 600px at 10% -10%, #0d1530 0%, #070b12 40%, #070b12 100%);
+  color:var(--text); font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* Layout */
+.container{ max-width:1080px; margin:0 auto; padding:24px }
+.section{ padding:48px 0 }
+.row{ display:flex; align-items:center; gap:16px }
+
+/* Cards */
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.14));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px; padding:22px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.35);
+}
+
+/* Buttons */
+.btn{ appearance:none; border:none; cursor:pointer; font-weight:700;
+  background:#1a2233; color:var(--text); border:1px solid rgba(255,255,255,.12);
+  padding:12px 18px; border-radius:14px; transition:.2s transform,.2s background,.2s box-shadow }
+.btn:hover{ transform:translateY(-1px); background:#202a3f }
+.btn:focus{ outline:none; box-shadow:var(--ring) }
+.btn-primary{ background:linear-gradient(180deg, var(--brand), #6857ff); border-color:transparent }
+.btn-primary:hover{ filter:brightness(1.06) }
+.btn-ghost{ background:transparent; border:1px solid rgba(255,255,255,.18) }
+
+/* Navbar */
+.nav{ position:sticky; top:0; z-index:50; backdrop-filter: blur(10px) saturate(120%);
+  background:linear-gradient(180deg, rgba(7,11,18,.85), rgba(7,11,18,.6));
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.nav-inner{ max-width:1080px; margin:0 auto; padding:12px 24px; display:flex; gap:16px; align-items:center }
+.nav a{ color:var(--text); text-decoration:none; opacity:.9; padding:8px 10px; border-radius:10px }
+.nav a:hover{ opacity:1; background:rgba(255,255,255,.06) }
+.brand{ font-weight:800; letter-spacing:.2px }
+
+/* Headings */
+h1{ font-size:44px; margin:0 0 10px }
+h2{ font-size:28px; margin:0 0 8px }
+h3{ font-size:20px; margin:0 0 6px }
+p{ color:var(--muted) }
+
+/* HERO (animated blobs + constellation) */
+.hero{ position:relative; overflow:hidden; border-bottom:1px solid rgba(255,255,255,.06) }
+.blob{ position:absolute; filter:blur(60px); opacity:.35; mix-blend-mode:screen; border-radius:50% }
+.blob.b1{ width:420px; height:420px; left:-60px; top:-80px; background:#7c6cff; animation:float1 18s ease-in-out infinite }
+.blob.b2{ width:360px; height:360px; right:-100px; top:-50px; background:#5dd0ff; animation:float2 22s ease-in-out infinite }
+@keyframes float1{ 0%{transform:translateY(0)} 50%{transform:translateY(40px)} 100%{transform:translateY(0)} }
+@keyframes float2{ 0%{transform:translateY(0)} 50%{transform:translateY(-50px)} 100%{transform:translateY(0)} }
+
+.constellation{ position:absolute; inset:0; pointer-events:none; opacity:.25 }
+.node{ width:8px; height:8px; border-radius:50%; background:#b1c5ff; position:absolute; box-shadow: 0 0 16px #b1c5ffaa }
+.line{ position:absolute; height:1px; background:linear-gradient(90deg, transparent, #b1c5ff, transparent) }
+
+/* Games */
+.stim-word{ font-size:76px; font-weight:800; letter-spacing:1px; margin:18px 0 }
+.choice-row{ display:flex; gap:12px; justify-content:center; margin-top:18px }
+.kb-hint{ font-size:12px; opacity:.65; margin-top:8px }
+.color-RED{ color:#e53935 } .color-GREEN{ color:#43a047 } .color-BLUE{ color:#1e88e5 } .color-YELLOW{ color:#fdd835 }
+
+.circle{ width:170px; height:170px; border-radius:999px; margin:32px auto;
+  border:1px solid rgba(255,255,255,.12); box-shadow: 0 10px 28px rgba(0,0,0,.35), inset 0 0 40px rgba(255,255,255,.08) }
+.circle.go{ background:var(--ok) } .circle.nogo{ background:var(--warn) }
+
+/* Grids */
+.grid{ display:grid; gap:16px }
+.grid-3{ grid-template-columns:repeat(3, minmax(0,1fr)) }
+.grid-2{ grid-template-columns:repeat(2, minmax(0,1fr)) }
+@media (max-width:880px){ .grid-3{ grid-template-columns:1fr } .grid-2{ grid-template-columns:1fr } }
+
+.badge{ font-size:11px; padding:5px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.14); color:#d7e2ff }
+
+/* Gallery placeholders if images missing */
+.ph{ background:linear-gradient(135deg, rgba(124,108,255,.2), rgba(93,208,255,.18)); border:1px solid rgba(255,255,255,.1); height:180px; border-radius:14px }
